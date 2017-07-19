@@ -25,8 +25,9 @@ def printThread(thread, out):
 			except Exception as e:
 				pass
 
-out = csv.writer(open("training.csv","wb"), delimiter='|',quoting=csv.QUOTE_ALL)
+out = csv.writer(open("output/training.csv","wb"), delimiter='|',quoting=csv.QUOTE_ALL)
 #out.writerow(["score", "body", "thread"])
 files = os.listdir("data")
 for file in files:
 	printThread("data/" + file, out)
+print('done')
