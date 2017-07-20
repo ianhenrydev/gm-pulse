@@ -22,23 +22,6 @@ class App extends React.Component {
   }
   
   handleSubmit(event) {
-    console.log(this.state.value);
-    var teams = [
-      ["Chicago Blackhawks", "hawks", "blackhawks", "chicago"],
-      ["Carolina Hurricanes", "carolina", "hurricanes", "canes"],
-      ];
-    var words = this.state.value.split(" ");
-    for (var i = 0; i < words.length; i++) {
-      var word = words[i];
-      for (var j = 0; j < teams.length; j++) {
-        var team = teams[j];
-        for (var k = 0; k < team.length; k++) {
-          if (word.toLowerCase() === team[k].toLowerCase()) {
-            console.log("Found: " + team[0])
-          }
-        }
-      }
-    }
     event.preventDefault();
   }
 
