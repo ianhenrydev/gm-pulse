@@ -3,7 +3,7 @@ try:
    import cPickle as pickle
 except:
    import pickle
-import os
+import os, sys
 
 def save_classifier(cl):
     print('saving classifier')
@@ -19,6 +19,7 @@ def load_classifier():
     return cl
 
 def test_classifier(cl):
+    print('testing classifier')
     with open('output/test.csv', 'r') as testFile:
         print(str(cl.accuracy(testFile)))
 
@@ -33,4 +34,10 @@ def get_classifier():
     return cl
 
 cl = get_classifier()
-test_classifier(cl)
+if len(sys.argv) > 1:
+    prob_dist = cl.prob_classify(sys.argv[1])
+    print("Class: " + str(prob_dist.max()))
+    print("Pos prob: " + str(round(prob_dist.prob("pos"), 2)))
+    print("Neg prob: " + str(round(prob_dist.prob("neg"), 2)))
+else:
+    test_classifier(cl)
