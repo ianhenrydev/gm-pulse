@@ -35,7 +35,7 @@ def printThread(thread, out, testOut):
 			except Exception as e:
 				pass
 
-directory = "soccer-data/"
+directory = "smol/"
 out = csv.writer(open("output/training.csv","wb"), delimiter=',',quoting=csv.QUOTE_ALL)
 testOut = csv.writer(open("output/test.csv","wb"), delimiter=',',quoting=csv.QUOTE_ALL)
 files = os.listdir(directory)
