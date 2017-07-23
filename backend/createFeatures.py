@@ -25,12 +25,24 @@ def getFeatures(filename):
 	            features[cleanword] = scores
     return features
         
-def nb(percentCont, percentClean):
+def nb(totPercentCont, totPercentClean):
     with open("output/freqTable.csv", 'rb') as csvfile:
         	lines = csv.reader(csvfile, delimiter='|')
+        	tupList = list()
 	        for line in lines:
 	            word = str(line[0])
-	            pCont = float(line[1]) / (float(line[1]) + float(line[2]))
+	            pCont = float(line[3])
+	            if pCont != 0:
+	                confOfCont = ((totPercentCont * pCont) * totPercentCont) / pCont
+	            else:
+	                confOfCont = 0.0
+	            tupList.append((word, confOfCont))
+	        tupList.sort(key=lambda x: x[1])
+	        out = csv.writer(open("output/out.csv","wb"), delimiter='|',quoting=csv.QUOTE_ALL)
+	        for tup in tupList:
+	            out.writerow([tup[0], tup[1]])
+	            
+	            
         
 def printFreqTable(features):
     freqWriter = csv.writer(open("output/freqTable.csv","wb"), delimiter='|',quoting=csv.QUOTE_ALL)
@@ -48,6 +60,7 @@ def printFreqTable(features):
     totPercentCont = float(totCont) / float(totClean)
     totPercentClean = 1 - totPercentCont
     print("Percent Controversial: " + str(totPercentCont) + " and Percent Clean: " + str(totPercentClean))
+    nb(totPercentCont, totPercentClean)
         
 
 features = getFeatures('output/training.csv')

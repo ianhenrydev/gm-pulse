@@ -1,15 +1,21 @@
 import json, csv, codecs, os
 
-def writeLine(comment, out, thread):
+def writeLine(comment, out):
 	score = int(comment['data']['controversiality'])
+	sentiment = ""
+	if score == 0:
+		sentiment = "pos"
+	else:
+		sentiment = "neg"
 	body = (comment['data']['body'].encode('ascii', 'ignore')).replace('\n', ' ').replace('\r', '')
-	out.writerow([score, body, thread])
+	out.writerow([body, sentiment])
+	
 
-def getReplies(parent, out, thread):
+def getReplies(parent, out):
 	try:
 		for comment in parent['data']['replies']['data']['children']:
-			writeLine(comment, out, thread)
-			getReplies(comment, out, thread)
+			writeLine(comment, out)
+			getReplies(comment, out)
 	except Exception as e:
 		pass
 	return
@@ -20,13 +26,13 @@ def printThread(thread, out):
 		thread = jsonFile[0]['data']['children'][0]['data']['name']
 		for comment in jsonFile[1]['data']['children']:
 			try:
-				writeLine(comment, out, thread)
-				getReplies(comment, out, thread)
+				writeLine(comment, out)
+				getReplies(comment, out)
 			except Exception as e:
 				pass
 
 directory = "soccer-data/"
-out = csv.writer(open("output/training.csv","wb"), delimiter='|',quoting=csv.QUOTE_ALL)
+out = csv.writer(open("output/training.csv","wb"), delimiter=',',quoting=csv.QUOTE_ALL)
 files = os.listdir(directory)
 for file in files:
 	printThread(directory + file, out)
