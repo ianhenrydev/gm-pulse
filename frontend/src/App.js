@@ -11,7 +11,7 @@ class App extends React.Component {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.state = { classification: [] };
+    this.state = { classification: [], value: "" };
   }
 
   componentDidMount() {
@@ -23,7 +23,7 @@ class App extends React.Component {
   
   handleSubmit(event) {
     event.preventDefault();
-        return fetch('https://gm-pulse-supraman.c9users.io:8081/classify')
+        return fetch('https://gm-pulse-supraman.c9users.io:8081/classify/'+ this.state.value)
       .then((response) => response.json())
       .then((responseJson) => {
         console.log(responseJson);
@@ -47,7 +47,10 @@ class App extends React.Component {
       placeholder="Enter text"
       value={this.state.value} onChange={this.handleChange} 
     />
-    <p>{this.state.classification[0]}</p>
+    <p>Text: {this.state.classification[0]}</p>
+    <p>Class: {this.state.classification[1]}</p>
+    <p>Positive Confidence: {this.state.classification[2]}</p>
+    <p>Negative Confidence: {this.state.classification[3]}</p>
     <Button type="submit">
       Submit
     </Button>

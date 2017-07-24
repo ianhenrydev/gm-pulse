@@ -32,6 +32,9 @@ def get_classifier():
 cl = get_classifier()
 if len(sys.argv) > 1:
     prob_dist = cl.prob_classify(sys.argv[1])
-    print json.dumps({ "class": prob_dist.max(), "pos_prob": round(prob_dist.prob("pos"), 2), "neg_prob": round(prob_dist.prob("neg"), 2)}, sort_keys=True)
+    print str(sys.argv[1])
+    print str(prob_dist.max())
+    print str(round(prob_dist.prob("pos"), 2))
+    print str(round(prob_dist.prob("neg"), 2))
 else:
     test_classifier(cl)
