@@ -5,17 +5,6 @@ from 'react';
 import { FormGroup, ControlLabel, FormControl, HelpBlock, Button } from 'react-bootstrap/lib/';
 import './App.css';
 
-var PythonShell = require('python-shell');
-
-var options = {
-  args: ['this is a test']
-};
-
-PythonShell.run('../../backend/classifier.py', options, function (err) {
-  if (err) throw err;
-  console.log('results: %j', results);
-});
-
 class App extends React.Component {
   
   constructor(props) {
