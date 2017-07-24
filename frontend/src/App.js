@@ -11,7 +11,7 @@ class App extends React.Component {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.state = { value: '' };
+    this.state = { classification: [] };
   }
 
   componentDidMount() {
@@ -23,6 +23,17 @@ class App extends React.Component {
   
   handleSubmit(event) {
     event.preventDefault();
+        return fetch('https://gm-pulse-supraman.c9users.io:8081/classify')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson);
+        this.setState({
+          classification: responseJson,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   render() {
@@ -36,6 +47,7 @@ class App extends React.Component {
       placeholder="Enter text"
       value={this.state.value} onChange={this.handleChange} 
     />
+    <p>{this.state.classification[0]}</p>
     <Button type="submit">
       Submit
     </Button>
