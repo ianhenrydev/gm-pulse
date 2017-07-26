@@ -1,36 +1,42 @@
-from textblob.classifiers import DecisionTreeClassifier
+from textblob.classifiers import NaiveBayesClassifier
 try:
    import cPickle as pickle
 except:
    import pickle
-import os, sys, json, numpy
+import os, sys, json, csv
 
 def save_classifier(cl):
     print str('saving classifier')
-    f = open('output/classifier-tree.pickle', 'wb')
+    f = open('output/classifier-naive.pickle', 'wb')
     pickle.dump(cl, f, -1)
     f.close()
 
 def load_classifier():
     print str('loading classifier')
-    f = open('output/classifier-tree.pickle', 'rb')
+    f = open('output/classifier-naive.pickle', 'rb')
     cl = pickle.load(f)
     f.close()
     return cl
 
 def test_classifier(cl):
+    out = csv.writer(open("output/results.csv","wb"), delimiter=',',quoting=csv.QUOTE_ALL)
     with open('output/test.csv', 'r') as testFile:
-        print(str(cl.accuracy(testFile)))
-        print(str(cl.show_informative_features(10)))
+        testReader = csv.reader(testFile, delimiter=',', quotechar='"')
+        for row in testReader:
+            prob_dist = cl.prob_classify(row[0])
+            outrow = [row[0], row[1], prob_dist.max(), round(prob_dist.prob("pos"), 2), round(prob_dist.prob("neg"), 2)]
+            out.writerow(outrow)
+        #print(str(cl.accuracy(testFile)))
+        #print(str(cl.show_informative_features(10)))
 
 def get_classifier():
     print str('getting classifier')
-    if os.path.isfile('output/classifier-tree.pickle'):
+    if os.path.isfile('output/classifier-naive.pickle'):
         cl = load_classifier()
     else:
         print str('creating classifier')
         with open('output/training.csv', 'r') as trainingFile:
-            cl = DecisionTreeClassifier(trainingFile, format="csv")
+            cl = NaiveBayesClassifier(trainingFile, format="csv")
             save_classifier(cl)
     return cl
 
