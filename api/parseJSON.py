@@ -1,18 +1,32 @@
-import json, csv, codecs, os
+import json, csv, codecs, os, sys
 from random import randint
 
+isTrain = True
+posCount = 0
+negCount = 0
+count = 0
+evenData = False
+
+def write(comment, sentiment):
+	body = (comment['data']['body'].encode('ascii', 'ignore')).replace('\n', ' ').replace('\r', '')
+	out.writerow([body, sentiment])
+	global count
+	count += 1
+	#if count >= 2000:
+		#sys.exit()
+
 def writeLine(comment, out, testOut):
+	global posCount, negCount, evenData
 	score = int(comment['data']['controversiality'])
 	sentiment = ""
 	if score == 0:
 		sentiment = "pos"
+		posCount += 1
+		write(comment, sentiment)
 	else:
 		sentiment = "neg"
-	body = (comment['data']['body'].encode('ascii', 'ignore')).replace('\n', ' ').replace('\r', '')
-	if randint(0, 3) == 0:
-		testOut.writerow([body, sentiment])
-	else:
-		out.writerow([body, sentiment])
+		negCount += 1
+		write(comment, sentiment)
 	
 
 def getReplies(parent, out, testOut):
@@ -35,9 +49,19 @@ def printThread(thread, out, testOut):
 			except Exception as e:
 				pass
 
+if len(sys.argv) > 1:
+	evenData = True
+else:
+	evenData = False
 directory = "soccer-data/"
-out = csv.writer(open("output/training.csv","wb"), delimiter=',',quoting=csv.QUOTE_ALL)
-testOut = csv.writer(open("output/test.csv","wb"), delimiter=',',quoting=csv.QUOTE_ALL)
+if evenData:
+	trainLocation = "train-even"
+	testLocation = "test-even"
+else:
+	trainLocation = "train"
+	testLocation = "test"
+out = csv.writer(open("output/" + trainLocation + ".csv","wb"), delimiter=',',quoting=csv.QUOTE_ALL)
+testOut = csv.writer(open("output/" + testLocation + ".csv","wb"), delimiter=',',quoting=csv.QUOTE_ALL)
 files = os.listdir(directory)
 for file in files:
 	printThread(directory + file, out, testOut)

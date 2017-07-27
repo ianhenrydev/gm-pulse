@@ -3,3 +3,4 @@ api/output/classifier-smol.pickle
 api/output/classifier-maxent.pickle
 api/output/classifier-tree.pickle
 frontend/node_modules/
+*.pickle
